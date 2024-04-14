@@ -8,7 +8,7 @@
 Now you can do a full text search or an attribute based search for that field.
 for example, lets say we want to retrieve all sub-folders under **mysapce** space
 
-we call the `/query` API with the following request body
+We call the `/query` API with the following request body:
 
 ```json
 {
@@ -35,7 +35,7 @@ And the results would be:
     scope={"public"}
 />
 
-and you can also add a search bar for the list view:
+And you can also add a search bar for the list view:
 
 <ListView
     type={QueryType.search}
@@ -45,7 +45,7 @@ and you can also add a search bar for the list view:
     scope={"public"}
 />
 
-or with a predefined search text:
+Or with a predefined search text:
 <ListView
     type={QueryType.search}
     space_name={"myspace"}
