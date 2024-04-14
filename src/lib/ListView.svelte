@@ -19,11 +19,16 @@
       ModalBody,
       ModalFooter,
       ModalHeader,
-      Button, Input,
+      Button,
+      InputGroup,
+      Input,
+      InputGroupText,
   } from "sveltestrap";
   import { params } from "@roxi/routify";
   import {bulkBucket} from "@/stores/bulk_bucket";
-  console.log(Dmart.baseURL)
+  import { _ } from "@/i18n";
+  import Icon from "@/lib/Icon.svelte";
+
   $bulkBucket = [];
 
   export let space_name: string;
@@ -34,9 +39,14 @@
   export let folderColumns: any = null;
   export let sort_by: any = null;
   export let sort_order: any = null;
-  export let is_clickable = true;
+  export let isClickable = false;
+  export let isSearchable = false;
   export let canDelete = false;
   export let scope = "managed";
+  export let searchValue = "";
+  if (searchValue !== "") {
+      search.set(searchValue);
+  }
 
   if (columns !== null && folderColumns !== null){
       throw new Error('columns and folderColumns cannot co-exist!');
@@ -124,13 +134,13 @@
       offset:
         objectDatatable.numberRowsPerPage *
         (objectDatatable.numberActivePage - 1),
-      search: $search,
+      search: isSearchable ? $search : searchValue,
       ...requestExtra,
       retrieve_json_payload: true
     }, scope);
 
     old_search = $search;
-    console.log({d: resp})
+
     total = resp.attributes.total;
 
     objectDatatable.arrayRawData = resp.records;
@@ -186,7 +196,7 @@
   }
 
   async function onListClick(record: any) {
-    if (!is_clickable) {
+    if (!isClickable) {
       return;
     }
 
@@ -233,6 +243,17 @@
     }
 
     redirectToEntry(record);
+  }
+
+  function handleSearch(e: any) {
+      e.preventDefault();
+      search.set(searchValue.replaceAll("@", "."));
+  }
+  function handleInput(e: any) {
+      searchValue = e.target.value;
+      if (searchValue === "") {
+          search.set(searchValue);
+      }
   }
 
   $: {
@@ -297,7 +318,6 @@
             await fetchPageRecords(false);
             handleAllBulk(null, false);
         })();
-
       }
 
       paginationBottomInfoFrom = objectDatatable.numberRowsPerPage *  (objectDatatable.numberActivePage - 1) + 1;
@@ -377,36 +397,51 @@
 <div class="list">
   {#await fetchPageRecords()}
     READING DATA...
-  {:then _}
+  {:then __}
     <Engine bind:propDatatable={objectDatatable} />
 
-    <div class="mx-3" transition:fade={{ delay: 25 }}>
-      {#if objectDatatable?.arraySearched.length === 0}
-        <div class="text-center pt-5">
-          <strong>NO RECORDS FOUND.</strong>
-        </div>
-      {:else}
-        <table class="table table-striped table-sm mt-2">
-          <thead>
+    {#if isSearchable}
+      <InputGroup size="sm">
+        <Input
+          type="search"
+          placeholder={$_("searching_for_what")}
+          on:input={handleInput}
+        />
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <span on:click={handleSearch}>
+        <InputGroupText><Icon name="search" /></InputGroupText>
+    </span>
+    </InputGroup>
+  {/if}
+
+  <div class="mx-3" transition:fade={{ delay: 25 }}>
+    {#if objectDatatable?.arraySearched.length === 0}
+      <div class="text-center pt-5">
+        <strong>NO RECORDS FOUND.</strong>
+      </div>
+    {:else}
+      <table class="table table-striped table-sm mt-2">
+        <thead>
+          <tr>
+            {#if canDelete}
+              <th><Input type="checkbox" on:change={handleAllBulk} /></th>
+            {/if}
+            {#each Object.keys(columns) as col}
+              <th>
+                <Sort bind:propDatatable={objectDatatable} propColumn={col}>{columns[col].title}</Sort>
+              </th>
+            {/each}
+          </tr>
+        </thead>
+        <tbody>
+          {#each objectDatatable.arrayRawData as row, index}
             <tr>
               {#if canDelete}
-                <th><Input type="checkbox" on:change={handleAllBulk} /></th>
+                <td style="cursor: pointer;"><Input id={row.shortname} type="checkbox" on:change={handleBulk} name={index} /></td>
               {/if}
               {#each Object.keys(columns) as col}
-                <th>
-                  <Sort bind:propDatatable={objectDatatable} propColumn={col}>{columns[col].title}</Sort>
-                </th>
-              {/each}
-            </tr>
-          </thead>
-          <tbody>
-            {#each objectDatatable.arrayRawData as row, index}
-              <tr>
-                {#if canDelete}
-                  <td style="cursor: pointer;"><Input id={row.shortname} type="checkbox" on:change={handleBulk} name={index} /></td>
-                {/if}
-                {#each Object.keys(columns) as col}
-                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                   <td
                     style="cursor: pointer;"
                     on:click={() => onListClick(row)}

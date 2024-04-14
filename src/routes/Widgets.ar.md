@@ -32,7 +32,6 @@
 type={QueryType.subpath}
 space_name={"myspace"}
 subpath={"/"}
-is_clickable={false}
 scope={"public"}
 />
 

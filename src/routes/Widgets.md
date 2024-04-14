@@ -13,7 +13,7 @@ we call the `/query` API with the following request body
 ```json
 {
   "filter_shortnames": [],
-  "type": "subpath",
+  "type": "search",
   "search": "",
   "space_name": "myspace",
   "subpath": "/",
@@ -29,9 +29,27 @@ we call the `/query` API with the following request body
 And the results would be:
 
 <ListView
-type={QueryType.subpath}
-space_name={"myspace"}
-subpath={"/"}
-is_clickable={false}
-scope={"public"}
+    type={QueryType.search}
+    space_name={"myspace"}
+    subpath={"/"}
+    scope={"public"}
+/>
+
+and you can also add a search bar for the list view:
+
+<ListView
+    type={QueryType.search}
+    space_name={"myspace"}
+    subpath={"/"}
+    isSearchable={true}
+    scope={"public"}
+/>
+
+or with a predefined search text:
+<ListView
+    type={QueryType.search}
+    space_name={"myspace"}
+    subpath={"/"}
+    searchValue={"test"}
+    scope={"public"}
 />
