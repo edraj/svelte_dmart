@@ -12,6 +12,7 @@
   import { signin } from "@/stores/user";
   import { _ } from "@/i18n";
   import {REGEX} from "@/utils/regex";
+  import {goto} from "@roxi/routify";
 
   let username: string;
   let password: string;
@@ -21,6 +22,7 @@
     isError = false;
     try {
       await signin(username, password);
+      $goto("/");
     } catch (error) {
       isError = true;
     }
