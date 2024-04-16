@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Modal, ModalHeader, ModalBody, Navbar, NavbarBrand, Input, Form, ModalFooter, Button} from "sveltestrap";
+    import {Modal, ModalHeader, ModalBody, Navbar, Input, Form, ModalFooter, Button} from "sveltestrap";
   import SelectLanguage from "./SelectLanguage.svelte";
   import Icon from "./Icon.svelte";
     import Dmart, {Status} from "@edraj/tsdmart";

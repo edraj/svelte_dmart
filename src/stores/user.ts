@@ -1,6 +1,6 @@
 import { Writable, writable } from "svelte/store";
 import Dmart from "@edraj/tsdmart";
-import { authToken } from "@/stores/management/auth";
+import { authToken } from "@/stores/auth";
 import { getLocaleFromNavigator } from "svelte-i18n";
 
 enum Locale {
@@ -68,7 +68,7 @@ export async function signin(username: string, password: string) {
   }
 }
 
-export async function signout() { 
+export async function signout() {
   if (typeof localStorage !== 'undefined' && JSON.parse(localStorage.getItem(KEY))?.signedin) {
     await Dmart.logout();
     localStorage.removeItem("active_section");
