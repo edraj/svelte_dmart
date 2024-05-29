@@ -6,7 +6,6 @@
   import {goto} from "@roxi/routify";
 
 
-
   let term = '';
   let suggestions = [];
   let delayTimer;
@@ -42,9 +41,7 @@
       }, 1000);
   }
 
-  // Function to handle suggestion click
   function handleSuggestionClick(suggestion: any) {
-      console.log(`going to ${suggestion.path}`);
       $goto(`${suggestion.path.replace('.md', '')}`);
       suggestions = [];
   }
@@ -62,14 +59,12 @@
     <div class="container">
       <div class="position-relative">
         <input type="text" class="form-control" placeholder="Search..."
-               bind:value={term}
-               on:input={handleInputChange}
-               on:focusout={()=>{
-                  setTimeout(()=>{
-                      suggestions = [];
-                  }, 200);
-               }}
-               on:focusin={handleInputChange}>
+         bind:value={term}
+         on:input={handleInputChange}
+         on:focusout={()=>{
+            setTimeout(()=>{suggestions = [];}, 200);
+         }}
+         on:focusin={handleInputChange}>
         {#if suggestions.length > 0}
           <ul class="list-group suggestion-list">
             {#each suggestions as suggestion}

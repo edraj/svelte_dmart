@@ -3,9 +3,13 @@
   import ListView from "@/lib/ListView.svelte";
 </script>
 
-# List view
+# Widgets
 
-Now you can do a full text search or an attribute based search for that field.
+This skeleton project comes with a few widgets that you can use to interact with the DMART API.
+
+## List view
+
+You can do a full text search or an attribute based search for that field.
 for example, lets say we want to retrieve all sub-folders under **mysapce** space
 
 We call the `/query` API with the following request body:
@@ -38,7 +42,7 @@ And the results would be:
 And you can also add a search bar for the list view:
 
 <ListView
-    type={QueryType.search}
+    type={QueryType.subpath}
     space_name={"myspace"}
     subpath={"/"}
     isSearchable={true}
@@ -53,3 +57,17 @@ Or with a predefined search text:
     searchValue={"test"}
     scope={"public"}
 />
+
+## Plant UML
+
+A plant uml diagram:
+
+```plantuml
+@startuml
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: Another authentication Response
+@enduml
+```
